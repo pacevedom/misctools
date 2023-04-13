@@ -4,7 +4,7 @@ import logging
 
 
 REBASE_AUTHOR = 'microshift-rebase-script[bot]'
-MANDATORY_LABELS = ['approved', 'lgtm']
+MANDATORY_LABELS = ['lgtm']
 MANDATORY_LABELS_BACKPORT = MANDATORY_LABELS + ['backport-risk-assessed', 'bugzilla/valid-bug', 'cherry-pick-approved']
 BACKPORT_REFS = ['release-4.13', 'release-4.12']
 RETITLE_COMMAND = '/retitle'
