@@ -4,7 +4,7 @@ import logging
 
 
 REBASE_AUTHOR = 'microshift-rebase-script[bot]'
-MANDATORY_LABELS = ['lgtm']
+MANDATORY_LABELS = ['approved', 'lgtm']
 MANDATORY_LABELS_BACKPORT = MANDATORY_LABELS + ['backport-risk-assessed', 'bugzilla/valid-bug', 'cherry-pick-approved']
 BACKPORT_REFS = ['release-4.13', 'release-4.12']
 RETITLE_COMMAND = '/retitle'
@@ -51,6 +51,17 @@ def needs_retitle(title):
 def add_comment(pr, comment):
     pr.create_issue_comment(comment)
 
+def build_comment_labels(labels):
+    comment = ''
+    for label in labels:
+        if label == 'lgtm':
+            comment += '/lgtm\n'
+        elif label == 'approved':
+            comment += '/approve\n'
+        else:
+            comment += f'{LABEL_COMMAND} {label}\n'
+    return comment
+
 def main():
     token = os.getenv('GITHUB_TOKEN')
     g = Github(token)
@@ -78,7 +89,7 @@ def main():
             logging.info('No missing labels. Skipping')
             continue
 
-        comment = '\n'.join([f'{LABEL_COMMAND} {label}' for label in missing_labels])
+        comment = build_comment_labels(missing_labels)
         logging.info(f'Required labels missing: {missing_labels}')
         add_comment(pull, comment)
 
